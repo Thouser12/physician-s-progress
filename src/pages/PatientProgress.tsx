@@ -1,0 +1,98 @@
+import { useParams, useNavigate } from "react-router-dom";
+import { ArrowLeft, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { Patient } from "@/types/doctor";
+import { LevelBadge } from "@/components/LevelBadge";
+import { Progress } from "@/components/ui/progress";
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from "recharts";
+
+interface Props {
+  patients: Patient[];
+}
+
+export default function PatientProgress({ patients }: Props) {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const patient = patients.find((p) => p.id === id);
+
+  if (!patient) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background text-muted-foreground">
+        Patient not found
+      </div>
+    );
+  }
+
+  const chartData = patient.weeklyHistory.map((w) => ({
+    name: `W${w.week}`,
+    completion: w.completion,
+  }));
+
+  const getChangeIcon = (change?: string) => {
+    if (change === "promoted") return <TrendingUp className="h-3.5 w-3.5 text-level-gold" />;
+    if (change === "demoted") return <TrendingDown className="h-3.5 w-3.5 text-destructive" />;
+    return <Minus className="h-3.5 w-3.5 text-muted-foreground" />;
+  };
+
+  const getChangeLabel = (change?: string, level?: string) => {
+    if (change === "promoted") return `Promoted to ${level}`;
+    if (change === "demoted") return `Demoted to ${level}`;
+    return `Maintained ${level}`;
+  };
+
+  return (
+    <div className="min-h-screen bg-background px-4 pb-24 pt-6">
+      <button onClick={() => navigate(`/patients/${id}`)} className="mb-4 flex items-center gap-1.5 text-sm text-muted-foreground">
+        <ArrowLeft className="h-4 w-4" /> Back
+      </button>
+
+      <h1 className="mb-1 text-2xl font-bold text-foreground">{patient.name}</h1>
+      <div className="mb-6 flex items-center gap-2">
+        <LevelBadge level={patient.level} />
+        <span className="text-sm text-muted-foreground">{patient.weeklyCompletion}% this week</span>
+      </div>
+
+      {/* Current progress */}
+      <div className="mb-6 rounded-lg bg-card p-4">
+        <p className="mb-2 text-sm text-muted-foreground">Current Week</p>
+        <div className="mb-1 flex items-end justify-between">
+          <span className="text-3xl font-bold text-foreground">{patient.weeklyCompletion}%</span>
+        </div>
+        <Progress value={patient.weeklyCompletion} className="h-2 bg-secondary" />
+      </div>
+
+      {/* Chart */}
+      <div className="mb-6 rounded-lg bg-card p-4">
+        <p className="mb-3 text-sm font-semibold text-muted-foreground uppercase tracking-wider">Weekly Overview</p>
+        <div className="h-40">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={chartData}>
+              <XAxis dataKey="name" tick={{ fill: "hsl(215 20% 65%)", fontSize: 11 }} axisLine={false} tickLine={false} />
+              <YAxis domain={[0, 100]} tick={{ fill: "hsl(215 20% 65%)", fontSize: 11 }} axisLine={false} tickLine={false} width={30} />
+              <Bar dataKey="completion" radius={[4, 4, 0, 0]}>
+                {chartData.map((_, i) => (
+                  <Cell key={i} fill="hsl(217 91% 60%)" fillOpacity={0.6 + (i / chartData.length) * 0.4} />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* History */}
+      <h2 className="mb-3 text-sm font-semibold text-muted-foreground uppercase tracking-wider">History</h2>
+      <div className="space-y-2">
+        {[...patient.weeklyHistory].reverse().map((w) => (
+          <div key={w.week} className="flex items-center justify-between rounded-lg bg-card p-3">
+            <div className="flex items-center gap-3">
+              {getChangeIcon(w.levelChange)}
+              <div>
+                <p className="text-sm font-medium text-foreground">Week {w.week} — {w.completion}%</p>
+                <p className="text-xs text-muted-foreground">{getChangeLabel(w.levelChange, w.newLevel)}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
