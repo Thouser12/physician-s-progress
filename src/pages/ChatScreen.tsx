@@ -1,13 +1,9 @@
 import { useState } from "react";
-import { Send, ArrowLeft } from "lucide-react";
-import { ChatThread } from "@/types/doctor";
+import { Send, ArrowLeft, Loader2 } from "lucide-react";
+import { useChat } from "@/hooks/useChat";
 
-interface Props {
-  chats: ChatThread[];
-  onSendMessage: (patientId: string, text: string) => void;
-}
-
-export default function ChatScreen({ chats, onSendMessage }: Props) {
+export default function ChatScreen() {
+  const { chats, loading, sendMessage } = useChat();
   const [selectedChat, setSelectedChat] = useState<string | null>(null);
   const [input, setInput] = useState("");
 
@@ -15,16 +11,24 @@ export default function ChatScreen({ chats, onSendMessage }: Props) {
 
   const handleSend = () => {
     if (!input.trim() || !selectedChat) return;
-    onSendMessage(selectedChat, input.trim());
+    sendMessage(selectedChat, input.trim());
     setInput("");
   };
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   // Chat list view
   if (!selectedChat) {
     return (
       <div className="min-h-screen bg-background px-4 pb-24 pt-6">
-        <h1 className="mb-1 text-2xl font-bold text-foreground">Messages</h1>
-        <p className="mb-6 text-sm text-muted-foreground">{chats.length} conversations</p>
+        <h1 className="mb-1 text-2xl font-bold text-foreground">Mensagens</h1>
+        <p className="mb-6 text-sm text-muted-foreground">{chats.length} conversas</p>
         <div className="space-y-2">
           {chats.map((chat) => {
             const lastMsg = chat.messages[chat.messages.length - 1];
@@ -42,13 +46,13 @@ export default function ChatScreen({ chats, onSendMessage }: Props) {
                   <p className="mt-0.5 truncate text-xs text-muted-foreground">{lastMsg?.text}</p>
                 </div>
                 <span className="shrink-0 text-[10px] text-muted-foreground">
-                  {lastMsg && new Date(lastMsg.timestamp).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                  {lastMsg && new Date(lastMsg.timestamp).toLocaleDateString("pt-BR", { month: "short", day: "numeric" })}
                 </span>
               </button>
             );
           })}
           {chats.length === 0 && (
-            <p className="py-10 text-center text-sm text-muted-foreground">No conversations yet</p>
+            <p className="py-10 text-center text-sm text-muted-foreground">Nenhuma conversa ainda</p>
           )}
         </div>
       </div>
@@ -58,7 +62,6 @@ export default function ChatScreen({ chats, onSendMessage }: Props) {
   // Chat detail view
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      {/* Header */}
       <div className="flex items-center gap-3 border-b border-border px-4 py-3">
         <button onClick={() => setSelectedChat(null)} className="text-muted-foreground">
           <ArrowLeft className="h-5 w-5" />
@@ -69,7 +72,6 @@ export default function ChatScreen({ chats, onSendMessage }: Props) {
         <p className="font-semibold text-foreground">{activeChat?.patientName}</p>
       </div>
 
-      {/* Messages */}
       <div className="flex-1 space-y-3 overflow-y-auto px-4 py-4 pb-32">
         {activeChat?.messages.map((msg) => (
           <div key={msg.id} className={`flex ${msg.senderType === "doctor" ? "justify-end" : "justify-start"}`}>
@@ -82,19 +84,18 @@ export default function ChatScreen({ chats, onSendMessage }: Props) {
             >
               <p className="text-sm">{msg.text}</p>
               <p className={`mt-1 text-[10px] ${msg.senderType === "doctor" ? "text-primary-foreground/60" : "text-muted-foreground"}`}>
-                {new Date(msg.timestamp).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}
+                {new Date(msg.timestamp).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
               </p>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Input */}
       <div className="fixed bottom-16 left-0 right-0 border-t border-border bg-card px-4 py-3">
         <div className="mx-auto flex max-w-lg items-center gap-2">
           <input
             type="text"
-            placeholder="Type a message..."
+            placeholder="Digite uma mensagem..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSend()}

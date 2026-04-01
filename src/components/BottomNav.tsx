@@ -2,9 +2,9 @@ import { Link, useLocation } from "react-router-dom";
 import { LayoutDashboard, Users, Bell, MessageCircle } from "lucide-react";
 
 const tabs = [
-  { path: "/", label: "Dashboard", icon: LayoutDashboard },
-  { path: "/patients", label: "Patients", icon: Users },
-  { path: "/requests", label: "Requests", icon: Bell },
+  { path: "/", label: "Inicio", icon: LayoutDashboard },
+  { path: "/patients", label: "Pacientes", icon: Users },
+  { path: "/requests", label: "Pedidos", icon: Bell },
   { path: "/chat", label: "Chat", icon: MessageCircle },
 ];
 

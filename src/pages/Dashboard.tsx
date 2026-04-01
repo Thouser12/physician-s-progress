@@ -1,49 +1,64 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Copy, Check, Users, Bell, TrendingUp, ArrowRight } from "lucide-react";
+import { Copy, Check, Users, Bell, TrendingUp, ArrowRight, LogOut } from "lucide-react";
+import { useDoctor } from "@/hooks/useDoctor";
+import { usePatients } from "@/hooks/usePatients";
+import { useRequests } from "@/hooks/useRequests";
+import { useAuth } from "@/contexts/AuthContext";
 
-interface DashboardProps {
-  totalPatients: number;
-  pendingRequests: number;
-  avgCompletion: number;
-}
-
-export default function Dashboard({ totalPatients, pendingRequests, avgCompletion }: DashboardProps) {
+export default function Dashboard() {
   const [copied, setCopied] = useState(false);
   const navigate = useNavigate();
-  const doctorId = "DR-48291";
+  const { profile } = useDoctor();
+  const { patients } = usePatients();
+  const { requests } = useRequests();
+  const { signOut } = useAuth();
+
+  const doctorCode = profile?.doctor_code ?? "...";
+  const doctorName = profile?.name ?? "Doutor";
+
+  const avgCompletion = patients.length
+    ? Math.round(patients.reduce((sum, p) => sum + p.weeklyCompletion, 0) / patients.length)
+    : 0;
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(doctorId);
+    navigator.clipboard.writeText(doctorCode);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
   const metrics = [
-    { label: "Total Patients", value: totalPatients, icon: Users, color: "text-primary" },
-    { label: "Pending Requests", value: pendingRequests, icon: Bell, color: "text-level-gold" },
-    { label: "Avg. Completion", value: `${avgCompletion}%`, icon: TrendingUp, color: "text-level-platinum" },
+    { label: "Pacientes", value: patients.length, icon: Users, color: "text-primary" },
+    { label: "Pendentes", value: requests.length, icon: Bell, color: "text-level-gold" },
+    { label: "Media Semanal", value: `${avgCompletion}%`, icon: TrendingUp, color: "text-level-platinum" },
   ];
 
   const actions = [
-    { label: "View Patient List", path: "/patients" },
-    { label: "View Requests", path: "/requests" },
-    { label: "Manage Goals", path: "/patients" },
+    { label: "Ver Pacientes", path: "/patients" },
+    { label: "Ver Solicitacoes", path: "/requests" },
+    { label: "Gerenciar Metas", path: "/patients" },
   ];
 
   return (
     <div className="min-h-screen bg-background px-4 pb-24 pt-6">
-      {/* Header */}
-      <div className="mb-6">
-        <p className="text-sm text-muted-foreground">Welcome back</p>
-        <h1 className="text-2xl font-bold text-foreground">Dr. Smith</h1>
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          <p className="text-sm text-muted-foreground">Bem-vindo(a)</p>
+          <h1 className="text-2xl font-bold text-foreground">{doctorName}</h1>
+        </div>
+        <button
+          onClick={signOut}
+          className="flex h-10 w-10 items-center justify-center rounded-lg text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+          title="Sair"
+        >
+          <LogOut className="h-5 w-5" />
+        </button>
       </div>
 
-      {/* Doctor ID */}
       <div className="mb-6 flex items-center gap-3 rounded-lg bg-card p-4">
         <div className="flex-1">
-          <p className="text-xs text-muted-foreground">Doctor ID</p>
-          <p className="font-mono text-lg font-semibold text-foreground">{doctorId}</p>
+          <p className="text-xs text-muted-foreground">Seu Codigo</p>
+          <p className="font-mono text-lg font-semibold text-foreground">{doctorCode}</p>
         </div>
         <button
           onClick={handleCopy}
@@ -53,7 +68,6 @@ export default function Dashboard({ totalPatients, pendingRequests, avgCompletio
         </button>
       </div>
 
-      {/* Metrics */}
       <div className="mb-6 grid grid-cols-3 gap-3">
         {metrics.map((m) => (
           <div key={m.label} className="rounded-lg bg-card p-3 text-center">
@@ -64,8 +78,7 @@ export default function Dashboard({ totalPatients, pendingRequests, avgCompletio
         ))}
       </div>
 
-      {/* Quick Actions */}
-      <h2 className="mb-3 text-sm font-semibold text-muted-foreground uppercase tracking-wider">Quick Actions</h2>
+      <h2 className="mb-3 text-sm font-semibold text-muted-foreground uppercase tracking-wider">Acoes Rapidas</h2>
       <div className="space-y-2">
         {actions.map((a) => (
           <button

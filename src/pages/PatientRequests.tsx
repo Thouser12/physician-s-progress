@@ -1,22 +1,37 @@
-import { PatientRequest } from "@/types/doctor";
+import { Loader2, Check, X } from "lucide-react";
 import { LevelBadge } from "@/components/LevelBadge";
-import { Check, X } from "lucide-react";
+import { useRequests } from "@/hooks/useRequests";
+import { usePatients } from "@/hooks/usePatients";
 
-interface Props {
-  requests: PatientRequest[];
-  onAccept: (id: string) => void;
-  onReject: (id: string) => void;
-}
+export default function PatientRequests() {
+  const { requests, loading, acceptRequest, rejectRequest } = useRequests();
+  const { refetch: refetchPatients } = usePatients();
 
-export default function PatientRequests({ requests, onAccept, onReject }: Props) {
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  const handleAccept = async (id: string) => {
+    await acceptRequest(id);
+    await refetchPatients();
+  };
+
+  const handleReject = async (id: string) => {
+    await rejectRequest(id);
+  };
+
   return (
     <div className="min-h-screen bg-background px-4 pb-24 pt-6">
-      <h1 className="mb-1 text-2xl font-bold text-foreground">Requests</h1>
-      <p className="mb-6 text-sm text-muted-foreground">{requests.length} pending</p>
+      <h1 className="mb-1 text-2xl font-bold text-foreground">Solicitacoes</h1>
+      <p className="mb-6 text-sm text-muted-foreground">{requests.length} pendentes</p>
 
       {requests.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
-          <p className="text-sm">No pending requests</p>
+          <p className="text-sm">Nenhuma solicitacao pendente</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -31,16 +46,16 @@ export default function PatientRequests({ requests, onAccept, onReject }: Props)
               </div>
               <div className="flex gap-2">
                 <button
-                  onClick={() => onAccept(req.id)}
+                  onClick={() => handleAccept(req.id)}
                   className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-primary py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
                 >
-                  <Check className="h-4 w-4" /> Accept
+                  <Check className="h-4 w-4" /> Aceitar
                 </button>
                 <button
-                  onClick={() => onReject(req.id)}
+                  onClick={() => handleReject(req.id)}
                   className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-destructive/10 py-2.5 text-sm font-medium text-destructive transition-colors hover:bg-destructive/20"
                 >
-                  <X className="h-4 w-4" /> Reject
+                  <X className="h-4 w-4" /> Recusar
                 </button>
               </div>
             </div>

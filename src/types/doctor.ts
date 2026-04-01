@@ -9,6 +9,7 @@ export interface Goal {
 
 export interface Patient {
   id: string;
+  connectionId: string;
   name: string;
   level: PatientLevel;
   weeklyCompletion: number;
@@ -40,6 +41,7 @@ export interface ChatMessage {
 
 export interface ChatThread {
   patientId: string;
+  connectionId: string;
   patientName: string;
   messages: ChatMessage[];
 }

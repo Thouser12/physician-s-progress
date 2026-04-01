@@ -13,6 +13,9 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ["'IBM Plex Sans'", "system-ui", "-apple-system", "sans-serif"],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -30,6 +33,14 @@ export default {
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
+        },
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
+        },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
         },
         muted: {
           DEFAULT: "hsl(var(--muted))",
@@ -59,9 +70,17 @@ export default {
         },
         level: {
           bronze: "hsl(var(--level-bronze))",
+          "bronze-highlight": "hsl(var(--level-bronze-highlight))",
+          "bronze-shadow": "hsl(var(--level-bronze-shadow))",
           silver: "hsl(var(--level-silver))",
+          "silver-highlight": "hsl(var(--level-silver-highlight))",
+          "silver-shadow": "hsl(var(--level-silver-shadow))",
           gold: "hsl(var(--level-gold))",
+          "gold-highlight": "hsl(var(--level-gold-highlight))",
+          "gold-shadow": "hsl(var(--level-gold-shadow))",
           platinum: "hsl(var(--level-platinum))",
+          "platinum-highlight": "hsl(var(--level-platinum-highlight))",
+          "platinum-shadow": "hsl(var(--level-platinum-shadow))",
         },
       },
       borderRadius: {
