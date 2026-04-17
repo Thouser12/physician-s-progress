@@ -3,12 +3,18 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { PatientRequest, PatientLevel } from '@/types/doctor';
 
+const LEVEL_MAP: Record<string, PatientLevel> = {
+  bronze: 'Bronze',
+  prata: 'Silver',
+  ouro: 'Gold',
+  platina: 'Platinum',
+  silver: 'Silver',
+  gold: 'Gold',
+  platinum: 'Platinum',
+};
+
 function normalizeLevel(level: string): PatientLevel {
-  const capitalized = level.charAt(0).toUpperCase() + level.slice(1).toLowerCase();
-  if (capitalized === 'Bronze' || capitalized === 'Silver' || capitalized === 'Gold' || capitalized === 'Platinum') {
-    return capitalized;
-  }
-  return 'Bronze';
+  return LEVEL_MAP[level.toLowerCase()] ?? 'Bronze';
 }
 
 export function useRequests() {

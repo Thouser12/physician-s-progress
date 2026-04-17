@@ -7,13 +7,21 @@ export interface Goal {
   frequency: string;
 }
 
+export interface DailyGoal {
+  id: string;
+  text: string;
+  completed: boolean;
+}
+
 export interface Patient {
   id: string;
   connectionId: string;
   name: string;
+  avatarUrl: string | null;
   level: PatientLevel;
   weeklyCompletion: number;
   goals: Goal[];
+  todayGoals: DailyGoal[];
   weeklyHistory: WeekRecord[];
 }
 
@@ -43,5 +51,6 @@ export interface ChatThread {
   patientId: string;
   connectionId: string;
   patientName: string;
+  patientAvatar: string | null;
   messages: ChatMessage[];
 }

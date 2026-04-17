@@ -1,12 +1,14 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { ChatThread, ChatMessage } from '@/types/doctor';
+import type { RealtimeChannel } from '@supabase/supabase-js';
 
 export function useChat() {
   const { user } = useAuth();
   const [chats, setChats] = useState<ChatThread[]>([]);
   const [loading, setLoading] = useState(true);
+  const channelRef = useRef<RealtimeChannel | null>(null);
 
   const fetchChats = useCallback(async () => {
     if (!user) return;
@@ -24,11 +26,11 @@ export function useChat() {
       return;
     }
 
-    // Get patient names
+    // Get patient names + avatars
     const patientIds = connections.map(c => c.user_id);
     const { data: profiles } = await supabase
       .from('profiles')
-      .select('id, name')
+      .select('id, name, avatar_url')
       .in('id', patientIds);
 
     // Get all messages for these connections
@@ -47,6 +49,7 @@ export function useChat() {
         patientId: conn.user_id,
         connectionId: conn.id,
         patientName: profile?.name ?? 'Paciente',
+        patientAvatar: profile?.avatar_url ?? null,
         messages: connMessages.map(m => ({
           id: m.id,
           senderId: m.sender_id,
@@ -68,10 +71,10 @@ export function useChat() {
   // Subscribe to new messages in real-time
   useEffect(() => {
     if (!user) return;
+    if (channelRef.current) return;
 
-    const channel = supabase
-      .channel('chat-messages')
-      .on(
+    const channel = supabase.channel(`chat-messages-${crypto.randomUUID()}`);
+    channel.on(
         'postgres_changes',
         {
           event: 'INSERT',
@@ -102,11 +105,15 @@ export function useChat() {
             })
           );
         }
-      )
-      .subscribe();
+      );
+    channel.subscribe();
+    channelRef.current = channel;
 
     return () => {
-      supabase.removeChannel(channel);
+      if (channelRef.current) {
+        supabase.removeChannel(channelRef.current);
+        channelRef.current = null;
+      }
     };
   }, [user]);
 

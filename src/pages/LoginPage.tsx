@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Eye, EyeOff, Loader2, Stethoscope } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
+import logo from "@/assets/logo.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -44,14 +45,12 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center px-4 py-8">
       <div className="flex flex-col items-center mb-10">
-        <div className="w-20 h-20 rounded-2xl bg-primary/15 flex items-center justify-center mb-5 ring-1 ring-primary/20">
-          <Stethoscope className="w-10 h-10 text-primary" />
-        </div>
+        <img src={logo} alt="Evolve" className="w-24 h-24 object-contain mb-5" />
         <h1 className="text-2xl font-bold text-foreground tracking-tight">
-          Painel do Medico
+          Evolve <span className="text-primary">Ascend</span>
         </h1>
         <p className="text-sm text-muted-foreground mt-1.5 text-center max-w-[280px]">
-          Acompanhe o progresso dos seus pacientes.
+          Painel do Medico
         </p>
       </div>
 

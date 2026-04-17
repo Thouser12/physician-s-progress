@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -8,6 +8,7 @@ interface DoctorProfile {
   crm_number: string | null;
   specialty: string | null;
   doctor_code: string;
+  avatar_url: string | null;
 }
 
 export function useDoctor() {
@@ -15,28 +16,28 @@ export function useDoctor() {
   const [profile, setProfile] = useState<DoctorProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const fetchProfile = useCallback(async () => {
     if (!user) {
       setProfile(null);
       setLoading(false);
       return;
     }
 
-    const fetchProfile = async () => {
-      const { data, error } = await supabase
-        .from('doctor_profiles')
-        .select('*')
-        .eq('id', user.id)
-        .single();
+    const { data, error } = await supabase
+      .from('doctor_profiles')
+      .select('*')
+      .eq('id', user.id)
+      .single();
 
-      if (!error && data) {
-        setProfile(data);
-      }
-      setLoading(false);
-    };
-
-    fetchProfile();
+    if (!error && data) {
+      setProfile(data);
+    }
+    setLoading(false);
   }, [user]);
 
-  return { profile, loading };
+  useEffect(() => {
+    fetchProfile();
+  }, [fetchProfile]);
+
+  return { profile, loading, refetch: fetchProfile };
 }

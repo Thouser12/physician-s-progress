@@ -9,6 +9,36 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      daily_records: {
+        Row: {
+          id: string
+          user_id: string
+          record_date: string
+          level: string
+          goals: Json
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          record_date: string
+          level?: string
+          goals?: Json
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          record_date?: string
+          level?: string
+          goals?: Json
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           id: string
@@ -16,6 +46,10 @@ export type Database = {
           level: string
           terms_accepted: boolean
           role: string
+          week_start_date: string | null
+          avatar_url: string | null
+          achievements_seen: string[]
+          last_chat_read_at: string | null
           created_at: string
           updated_at: string
         }
@@ -25,6 +59,10 @@ export type Database = {
           level?: string
           terms_accepted?: boolean
           role?: string
+          week_start_date?: string | null
+          avatar_url?: string | null
+          achievements_seen?: string[]
+          last_chat_read_at?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -34,8 +72,48 @@ export type Database = {
           level?: string
           terms_accepted?: boolean
           role?: string
+          week_start_date?: string | null
+          avatar_url?: string | null
+          achievements_seen?: string[]
+          last_chat_read_at?: string | null
           created_at?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      weekly_summaries: {
+        Row: {
+          id: string
+          user_id: string
+          week_start: string
+          week_end: string
+          percentage: number
+          level_before: string
+          level_after: string
+          status: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          week_start: string
+          week_end: string
+          percentage?: number
+          level_before: string
+          level_after: string
+          status: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          week_start?: string
+          week_end?: string
+          percentage?: number
+          level_before?: string
+          level_after?: string
+          status?: string
+          created_at?: string
         }
         Relationships: []
       }
@@ -46,6 +124,8 @@ export type Database = {
           crm_number: string | null
           specialty: string | null
           doctor_code: string
+          avatar_url: string | null
+          last_chat_read_at: string | null
           created_at: string
           updated_at: string
         }
@@ -55,6 +135,8 @@ export type Database = {
           crm_number?: string | null
           specialty?: string | null
           doctor_code: string
+          avatar_url?: string | null
+          last_chat_read_at?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -64,6 +146,8 @@ export type Database = {
           crm_number?: string | null
           specialty?: string | null
           doctor_code?: string
+          avatar_url?: string | null
+          last_chat_read_at?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -140,6 +224,27 @@ export type Database = {
           frequency?: string
           is_active?: boolean
           created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      connection_read_states: {
+        Row: {
+          connection_id: string
+          user_id: string
+          last_read_at: string
+          updated_at: string
+        }
+        Insert: {
+          connection_id: string
+          user_id: string
+          last_read_at?: string
+          updated_at?: string
+        }
+        Update: {
+          connection_id?: string
+          user_id?: string
+          last_read_at?: string
           updated_at?: string
         }
         Relationships: []

@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { BottomNav } from "@/components/BottomNav";
@@ -14,9 +14,19 @@ import PatientDetail from "@/pages/PatientDetail";
 import PatientProgress from "@/pages/PatientProgress";
 import PatientRequests from "@/pages/PatientRequests";
 import ChatScreen from "@/pages/ChatScreen";
+import ProfilePage from "@/pages/ProfilePage";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
+
+function AppLayout() {
+  return (
+    <ProtectedRoute>
+      <Outlet />
+      <BottomNav />
+    </ProtectedRoute>
+  );
+}
 
 const App = () => {
   return (
@@ -30,15 +40,17 @@ const App = () => {
               <Routes>
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/signup" element={<SignupPage />} />
-                <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-                <Route path="/patients" element={<ProtectedRoute><PatientList /></ProtectedRoute>} />
-                <Route path="/patients/:id" element={<ProtectedRoute><PatientDetail /></ProtectedRoute>} />
-                <Route path="/patients/:id/progress" element={<ProtectedRoute><PatientProgress /></ProtectedRoute>} />
-                <Route path="/requests" element={<ProtectedRoute><PatientRequests /></ProtectedRoute>} />
-                <Route path="/chat" element={<ProtectedRoute><ChatScreen /></ProtectedRoute>} />
+                <Route element={<AppLayout />}>
+                  <Route path="/" element={<Dashboard />} />
+                  <Route path="/patients" element={<PatientList />} />
+                  <Route path="/patients/:id" element={<PatientDetail />} />
+                  <Route path="/patients/:id/progress" element={<PatientProgress />} />
+                  <Route path="/requests" element={<PatientRequests />} />
+                  <Route path="/chat" element={<ChatScreen />} />
+                  <Route path="/perfil" element={<ProfilePage />} />
+                </Route>
                 <Route path="*" element={<NotFound />} />
               </Routes>
-              <BottomNav />
             </div>
           </AuthProvider>
         </BrowserRouter>
