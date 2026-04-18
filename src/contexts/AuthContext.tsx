@@ -15,41 +15,18 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const WRONG_ROLE_ERROR = 'Esta conta e de paciente. Use o app do paciente.';
 
-/** Returns true if this account is allowed on the doctor app.
- *  Checks both profiles.role='doctor' OR existence of a doctor_profiles row. Permissive on errors.
- */
-async function isDoctorAccount(userId: string): Promise<boolean> {
-  try {
-    const [profileRes, doctorProfileRes] = await Promise.all([
-      supabase.from('profiles').select('role').eq('id', userId).maybeSingle(),
-      supabase.from('doctor_profiles').select('id').eq('id', userId).maybeSingle(),
-    ]);
-    if (profileRes.data?.role === 'doctor') return true;
-    if (doctorProfileRes.data) return true;
-    return false;
-  } catch {
-    return true;
-  }
-}
-
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, newSession) => {
-      setSession(newSession);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
       setLoading(false);
-
-      if (newSession?.user) {
-        isDoctorAccount(newSession.user.id).then(ok => {
-          if (!ok) supabase.auth.signOut();
-        });
-      }
     });
 
-    supabase.auth.getSession().then(({ data: { session: current } }) => {
-      setSession(current);
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
       setLoading(false);
     });
 
@@ -72,11 +49,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) return { error: error.message };
 
+    // Validate: must have doctor_profile OR role='doctor'. Permissive on errors.
     if (data.user) {
-      const ok = await isDoctorAccount(data.user.id);
-      if (!ok) {
-        await supabase.auth.signOut();
-        return { error: WRONG_ROLE_ERROR };
+      try {
+        const [profileRes, docRes] = await Promise.all([
+          supabase.from('profiles').select('role').eq('id', data.user.id).maybeSingle(),
+          supabase.from('doctor_profiles').select('id').eq('id', data.user.id).maybeSingle(),
+        ]);
+        const isDoctor = profileRes.data?.role === 'doctor' || !!docRes.data;
+        if (!isDoctor) {
+          await supabase.auth.signOut();
+          return { error: WRONG_ROLE_ERROR };
+        }
+      } catch {
+        // Permissive on validation errors
       }
     }
 
