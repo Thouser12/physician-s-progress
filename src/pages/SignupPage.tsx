@@ -47,7 +47,7 @@ export default function SignupPage() {
       <div className="min-h-screen bg-background flex flex-col items-center justify-center px-4 py-8">
         <Card className="w-full max-w-sm border-border/50 shadow-lg shadow-black/20">
           <CardContent className="pt-6 text-center space-y-4">
-            <img src={logo} alt="Evolve" className="w-16 h-16 object-contain mx-auto" />
+            <img src={logo} alt="Uberlingen" className="w-16 h-16 object-contain mx-auto" />
             <h2 className="text-xl font-bold text-foreground">Verifique seu email</h2>
             <p className="text-sm text-muted-foreground">
               Enviamos um link de confirmacao para <strong className="text-foreground">{email}</strong>. Clique nele para ativar sua conta.
@@ -64,8 +64,8 @@ export default function SignupPage() {
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center px-4 py-8">
       <div className="flex flex-col items-center mb-10">
-        <img src={logo} alt="Evolve" className="w-24 h-24 object-contain mb-5" />
-        <h1 className="text-2xl font-bold text-foreground tracking-tight">Evolve <span className="text-primary">Ascend</span></h1>
+        <img src={logo} alt="Uberlingen" className="w-24 h-24 object-contain mb-5" />
+        <h1 className="text-2xl font-bold text-foreground tracking-tight">Uberlingen</h1>
         <p className="text-sm text-muted-foreground mt-1.5 text-center max-w-[280px]">
           Crie sua conta de medico.
         </p>

@@ -45,9 +45,9 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center px-4 py-8">
       <div className="flex flex-col items-center mb-10">
-        <img src={logo} alt="Evolve" className="w-24 h-24 object-contain mb-5" />
+        <img src={logo} alt="Uberlingen" className="w-24 h-24 object-contain mb-5" />
         <h1 className="text-2xl font-bold text-foreground tracking-tight">
-          Evolve <span className="text-primary">Ascend</span>
+          Uberlingen
         </h1>
         <p className="text-sm text-muted-foreground mt-1.5 text-center max-w-[280px]">
           Painel do Medico
