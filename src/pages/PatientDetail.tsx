@@ -17,52 +17,52 @@ const LEVEL_LABELS: Record<PatientLevel, string> = {
 
 const LEVEL_GOALS: Record<PatientLevel, string[]> = {
   Bronze: [
-    'Beber pelo menos 6 copos de agua',
+    'Beber pelo menos 6 copos de água',
     'Caminhar por 15 minutos',
     'Comer uma fruta',
     'Dormir antes das 23h',
     'Evitar refrigerante',
     'Fazer 5 minutos de alongamento',
-    'Tomar cafe da manha saudavel',
-    'Registrar suas refeicoes',
-    'Praticar 3 minutos de respiracao consciente',
-    'Ler 10 paginas de um livro',
+    'Tomar café da manhã saudável',
+    'Registrar suas refeições',
+    'Praticar 3 minutos de respiração consciente',
+    'Ler 10 páginas de um livro',
   ],
   Silver: [
-    'Beber pelo menos 8 copos de agua',
+    'Beber pelo menos 8 copos de água',
     'Caminhar por 30 minutos',
-    'Comer 2 porcoes de frutas',
+    'Comer 2 porções de frutas',
     'Dormir antes das 22h30',
     'Evitar alimentos ultraprocessados',
-    'Fazer 10 minutos de exercicio',
-    'Preparar uma refeicao saudavel',
+    'Fazer 10 minutos de exercício',
+    'Preparar uma refeição saudável',
     'Registrar humor e energia do dia',
     'Meditar por 5 minutos',
     'Reduzir tempo de tela em 30 minutos',
   ],
   Gold: [
-    'Beber pelo menos 10 copos de agua',
-    'Praticar 30 minutos de exercicio fisico',
-    'Comer 3 porcoes de vegetais',
+    'Beber pelo menos 10 copos de água',
+    'Praticar 30 minutos de exercício físico',
+    'Comer 3 porções de vegetais',
     'Dormir 7-8 horas completas',
-    'Cozinhar todas as refeicoes do dia',
+    'Cozinhar todas as refeições do dia',
     'Fazer 15 minutos de treino funcional',
-    'Planejar refeicoes do dia seguinte',
-    'Praticar gratidao (3 itens)',
+    'Planejar refeições do dia seguinte',
+    'Praticar gratidão (3 itens)',
     'Meditar por 10 minutos',
     'Ler por 30 minutos',
   ],
   Platinum: [
-    'Beber 12 copos de agua',
+    'Beber 12 copos de água',
     'Treinar por 45 minutos',
     'Seguir plano alimentar completo',
     'Manter rotina de sono consistente',
     'Zero ultraprocessados no dia',
-    'Fazer treino de forca ou resistencia',
-    'Preparar marmitas saudaveis',
-    'Journaling: reflexao diaria escrita',
+    'Fazer treino de força ou resistência',
+    'Preparar marmitas saudáveis',
+    'Journaling: reflexão diária escrita',
     'Meditar por 15 minutos',
-    'Ensinar um habito saudavel a alguem',
+    'Ensinar um hábito saudável a alguém',
   ],
 };
 
@@ -93,7 +93,7 @@ export default function PatientDetail() {
   if (!patient) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background text-muted-foreground">
-        Paciente nao encontrado
+        Paciente não encontrado
       </div>
     );
   }
@@ -289,7 +289,7 @@ export default function PatientDetail() {
           </div>
         ) : (
           <div className="rounded-lg bg-card p-4 text-center">
-            <p className="text-sm text-muted-foreground">Paciente ainda nao abriu o app hoje</p>
+            <p className="text-sm text-muted-foreground">Paciente ainda não abriu o app hoje</p>
           </div>
         )}
       </div>
@@ -312,13 +312,13 @@ export default function PatientDetail() {
       {showAddForm && (
         <div className="mb-3 rounded-lg bg-card p-4 space-y-3">
           <input
-            placeholder="Titulo da meta"
+            placeholder="Título da meta"
             value={newTitle}
             onChange={(e) => setNewTitle(e.target.value)}
             className="w-full rounded-md bg-secondary p-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
           />
           <input
-            placeholder="Descricao (opcional)"
+            placeholder="Descrição (opcional)"
             value={newDesc}
             onChange={(e) => setNewDesc(e.target.value)}
             className="w-full rounded-md bg-secondary p-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
@@ -342,7 +342,7 @@ export default function PatientDetail() {
             className="w-full rounded-md bg-secondary p-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
           />
           <input
-            placeholder="Descricao (opcional)"
+            placeholder="Descrição (opcional)"
             value={editingGoal.description || ""}
             onChange={(e) => setEditingGoal({ ...editingGoal, description: e.target.value })}
             className="w-full rounded-md bg-secondary p-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
@@ -386,7 +386,7 @@ export default function PatientDetail() {
         ))}
         {patient.goals.length === 0 && (
           <p className="py-4 text-center text-sm text-muted-foreground">
-            Nenhuma meta personalizada. Use as metas padrao do nivel ou adicione metas customizadas.
+            Nenhuma meta personalizada. Use as metas padrao do nível ou adicione metas customizadas.
           </p>
         )}
       </div>
@@ -397,7 +397,7 @@ export default function PatientDetail() {
           onClick={() => setShowLevels(!showLevels)}
           className="mb-3 flex w-full items-center justify-between text-sm font-semibold uppercase tracking-wider text-muted-foreground"
         >
-          <span>Metas por Nivel</span>
+          <span>Metas por Nível</span>
           {showLevels ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
         </button>
 

@@ -50,7 +50,7 @@ export default function SignupPage() {
             <img src={logo} alt="Uberlingen" className="w-16 h-16 object-contain mx-auto" />
             <h2 className="text-xl font-bold text-foreground">Verifique seu email</h2>
             <p className="text-sm text-muted-foreground">
-              Enviamos um link de confirmacao para <strong className="text-foreground">{email}</strong>. Clique nele para ativar sua conta.
+              Enviamos um link de confirmação para <strong className="text-foreground">{email}</strong>. Clique nele para ativar sua conta.
             </p>
             <Button variant="outline" className="w-full" onClick={() => navigate("/login")}>
               Voltar ao Login
@@ -67,7 +67,7 @@ export default function SignupPage() {
         <img src={logo} alt="Uberlingen" className="w-24 h-24 object-contain mb-5" />
         <h1 className="text-2xl font-bold text-foreground tracking-tight">Uberlingen</h1>
         <p className="text-sm text-muted-foreground mt-1.5 text-center max-w-[280px]">
-          Crie sua conta de medico.
+          Crie sua conta de médico.
         </p>
       </div>
 
@@ -170,7 +170,7 @@ export default function SignupPage() {
       </Card>
 
       <div className="mt-8 flex items-center gap-1.5 text-sm">
-        <span className="text-muted-foreground">Ja tem uma conta?</span>
+        <span className="text-muted-foreground">Já tem uma conta?</span>
         <button onClick={() => navigate("/login")} className="text-primary font-medium hover:underline underline-offset-2 transition-colors">
           Entrar
         </button>

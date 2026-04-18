@@ -31,7 +31,7 @@ export default function PatientRequests() {
 
       {requests.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
-          <p className="text-sm">Nenhuma solicitacao pendente</p>
+          <p className="text-sm">Nenhuma solicitação pendente</p>
         </div>
       ) : (
         <div className="space-y-3">

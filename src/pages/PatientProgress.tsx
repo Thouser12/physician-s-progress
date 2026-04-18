@@ -22,7 +22,7 @@ export default function PatientProgress() {
   if (!patient) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background text-muted-foreground">
-        Paciente nao encontrado
+        Paciente não encontrado
       </div>
     );
   }
@@ -83,10 +83,10 @@ export default function PatientProgress() {
         </div>
       )}
 
-      <h2 className="mb-3 text-sm font-semibold text-muted-foreground uppercase tracking-wider">Historico</h2>
+      <h2 className="mb-3 text-sm font-semibold text-muted-foreground uppercase tracking-wider">Histórico</h2>
       <div className="space-y-2">
         {patient.weeklyHistory.length === 0 ? (
-          <p className="py-6 text-center text-sm text-muted-foreground">Nenhum historico ainda</p>
+          <p className="py-6 text-center text-sm text-muted-foreground">Nenhum histórico ainda</p>
         ) : (
           [...patient.weeklyHistory].reverse().map((w) => (
             <div key={w.week} className="flex items-center justify-between rounded-lg bg-card p-3">

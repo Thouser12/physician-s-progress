@@ -26,7 +26,7 @@ export default function ProfilePage() {
   const copyCode = async () => {
     if (!profile) return;
     await navigator.clipboard.writeText(profile.doctor_code);
-    toast({ title: 'Codigo copiado', description: 'Codigo copiado para a area de transferencia' });
+    toast({ title: 'Código copiado', description: 'Código copiado para a área de transferência' });
   };
 
   if (loading) {
@@ -40,7 +40,7 @@ export default function ProfilePage() {
   if (!profile) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background text-muted-foreground">
-        Perfil nao encontrado
+        Perfil não encontrado
       </div>
     );
   }
@@ -74,11 +74,11 @@ export default function ProfilePage() {
         {/* Doctor code card */}
         <Card className="mb-4">
           <CardHeader className="pb-3">
-            <CardTitle className="text-base">Seu Codigo</CardTitle>
+            <CardTitle className="text-base">Seu Código</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="mb-3 text-sm text-muted-foreground">
-              Compartilhe este codigo com seus pacientes para que se vinculem a voce.
+              Compartilhe este código com seus pacientes para que se vinculem a você.
             </p>
             <div className="flex items-center gap-2 rounded-lg border border-primary/30 bg-primary/5 p-3">
               <code className="flex-1 text-center text-xl font-bold tracking-widest text-primary">
@@ -114,21 +114,21 @@ export default function ProfilePage() {
         {/* Details */}
         <Card className="mb-6">
           <CardHeader className="pb-3">
-            <CardTitle className="text-base">Informacoes</CardTitle>
+            <CardTitle className="text-base">Informações</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-sm">
             <div className="flex items-center gap-3">
               <Stethoscope className="h-4 w-4 shrink-0 text-muted-foreground" />
               <div>
                 <p className="text-xs text-muted-foreground">Especialidade</p>
-                <p className="text-foreground">{profile.specialty || 'Nao informada'}</p>
+                <p className="text-foreground">{profile.specialty || 'Não informada'}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <IdCard className="h-4 w-4 shrink-0 text-muted-foreground" />
               <div>
                 <p className="text-xs text-muted-foreground">CRM</p>
-                <p className="text-foreground">{profile.crm_number || 'Nao informado'}</p>
+                <p className="text-foreground">{profile.crm_number || 'Não informado'}</p>
               </div>
             </div>
           </CardContent>

@@ -50,7 +50,7 @@ export default function LoginPage() {
           Uberlingen
         </h1>
         <p className="text-sm text-muted-foreground mt-1.5 text-center max-w-[280px]">
-          Painel do Medico
+          Painel do Médico
         </p>
       </div>
 
@@ -109,7 +109,7 @@ export default function LoginPage() {
                 </button>
               </div>
               {passwordError && (
-                <p className="text-xs text-destructive mt-1">Senha obrigatoria.</p>
+                <p className="text-xs text-destructive mt-1">Senha obrigatória.</p>
               )}
             </div>
 

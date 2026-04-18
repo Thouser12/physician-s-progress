@@ -57,7 +57,7 @@ export default function Dashboard() {
 
       <div className="mb-6 flex items-center gap-3 rounded-lg bg-card p-4">
         <div className="flex-1">
-          <p className="text-xs text-muted-foreground">Seu Codigo</p>
+          <p className="text-xs text-muted-foreground">Seu Código</p>
           <p className="font-mono text-lg font-semibold text-foreground">{doctorCode}</p>
         </div>
         <button

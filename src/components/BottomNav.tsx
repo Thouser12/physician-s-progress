@@ -4,7 +4,7 @@ import { useUnreadPerConnection } from "@/hooks/useUnreadPerConnection";
 import { usePendingRequestsCount } from "@/hooks/usePendingRequestsCount";
 
 const tabs = [
-  { path: "/", label: "Inicio", icon: LayoutDashboard },
+  { path: "/", label: "Início", icon: LayoutDashboard },
   { path: "/patients", label: "Pacientes", icon: Users },
   { path: "/requests", label: "Pedidos", icon: Bell, badgeType: "requests" as const },
   { path: "/chat", label: "Chat", icon: MessageCircle, badgeType: "chat" as const },
