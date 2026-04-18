@@ -131,6 +131,7 @@ export default function LoginPage() {
             <div className="text-center">
               <button
                 type="button"
+                onClick={() => navigate('/forgot-password')}
                 className="text-xs text-muted-foreground hover:text-primary transition-colors"
               >
                 Esqueceu a senha?
