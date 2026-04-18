@@ -13,18 +13,47 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const WRONG_ROLE_ERROR = 'Esta conta e de paciente. Use o app do paciente.';
+
+async function validateDoctorRole(userId: string): Promise<boolean> {
+  const { data } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', userId)
+    .maybeSingle();
+  return data?.role === 'doctor';
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, newSession) => {
+      if (newSession?.user) {
+        const isValid = await validateDoctorRole(newSession.user.id);
+        if (!isValid) {
+          await supabase.auth.signOut();
+          setSession(null);
+          setLoading(false);
+          return;
+        }
+      }
+      setSession(newSession);
       setLoading(false);
     });
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
+    supabase.auth.getSession().then(async ({ data: { session: current } }) => {
+      if (current?.user) {
+        const isValid = await validateDoctorRole(current.user.id);
+        if (!isValid) {
+          await supabase.auth.signOut();
+          setSession(null);
+          setLoading(false);
+          return;
+        }
+      }
+      setSession(current);
       setLoading(false);
     });
 
@@ -44,8 +73,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    return { error: error?.message ?? null };
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) return { error: error.message };
+
+    if (data.user) {
+      const isValid = await validateDoctorRole(data.user.id);
+      if (!isValid) {
+        await supabase.auth.signOut();
+        return { error: WRONG_ROLE_ERROR };
+      }
+    }
+
+    return { error: null };
   };
 
   const signOut = async () => {
