@@ -15,13 +15,21 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const WRONG_ROLE_ERROR = 'Esta conta e de paciente. Use o app do paciente.';
 
-async function validateDoctorRole(userId: string): Promise<boolean> {
-  const { data } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', userId)
-    .maybeSingle();
-  return data?.role === 'doctor';
+/** Returns true if this account is allowed on the doctor app.
+ *  Checks both profiles.role='doctor' OR existence of a doctor_profiles row. Permissive on errors.
+ */
+async function isDoctorAccount(userId: string): Promise<boolean> {
+  try {
+    const [profileRes, doctorProfileRes] = await Promise.all([
+      supabase.from('profiles').select('role').eq('id', userId).maybeSingle(),
+      supabase.from('doctor_profiles').select('id').eq('id', userId).maybeSingle(),
+    ]);
+    if (profileRes.data?.role === 'doctor') return true;
+    if (doctorProfileRes.data) return true;
+    return false;
+  } catch {
+    return true;
+  }
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -29,30 +37,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, newSession) => {
-      if (newSession?.user) {
-        const isValid = await validateDoctorRole(newSession.user.id);
-        if (!isValid) {
-          await supabase.auth.signOut();
-          setSession(null);
-          setLoading(false);
-          return;
-        }
-      }
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, newSession) => {
       setSession(newSession);
       setLoading(false);
+
+      if (newSession?.user) {
+        isDoctorAccount(newSession.user.id).then(ok => {
+          if (!ok) supabase.auth.signOut();
+        });
+      }
     });
 
-    supabase.auth.getSession().then(async ({ data: { session: current } }) => {
-      if (current?.user) {
-        const isValid = await validateDoctorRole(current.user.id);
-        if (!isValid) {
-          await supabase.auth.signOut();
-          setSession(null);
-          setLoading(false);
-          return;
-        }
-      }
+    supabase.auth.getSession().then(({ data: { session: current } }) => {
       setSession(current);
       setLoading(false);
     });
@@ -77,8 +73,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (error) return { error: error.message };
 
     if (data.user) {
-      const isValid = await validateDoctorRole(data.user.id);
-      if (!isValid) {
+      const ok = await isDoctorAccount(data.user.id);
+      if (!ok) {
         await supabase.auth.signOut();
         return { error: WRONG_ROLE_ERROR };
       }
