@@ -31,12 +31,14 @@ export default function SignupPage() {
     setError("");
     setIsLoading(true);
 
-    const { error } = await signUp(email, password, name.trim(), crmNumber.trim(), specialty.trim());
+    const { error, needsEmailConfirmation } = await signUp(email, password, name.trim(), crmNumber.trim(), specialty.trim());
 
     if (error) {
       setError(error);
-    } else {
+    } else if (needsEmailConfirmation) {
       setSuccess(true);
+    } else {
+      navigate("/");
     }
 
     setIsLoading(false);
