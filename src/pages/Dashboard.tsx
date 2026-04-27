@@ -40,7 +40,7 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-background px-4 pb-24 pt-6">
+    <div className="min-h-screen bg-background px-4 pb-safe-24 pt-safe-6">
       <div className="mb-6 flex items-center justify-between">
         <div>
           <p className="text-sm text-muted-foreground">Bem-vindo(a)</p>

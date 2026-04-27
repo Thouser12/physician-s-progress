@@ -37,7 +37,7 @@ export default function ChatScreen() {
   // Chat list view
   if (!selectedChat) {
     return (
-      <div className="min-h-screen bg-background px-4 pb-24 pt-6">
+      <div className="min-h-screen bg-background px-4 pb-safe-24 pt-safe-6">
         <h1 className="mb-1 text-2xl font-bold text-foreground">Mensagens</h1>
         <p className="mb-6 text-sm text-muted-foreground">{chats.length} conversas</p>
         <div className="space-y-2">
@@ -92,7 +92,7 @@ export default function ChatScreen() {
   // Chat detail view
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <div className="flex items-center gap-3 border-b border-border px-4 py-3">
+      <div className="flex items-center gap-3 border-b border-border px-4 pb-3 pt-[calc(env(safe-area-inset-top)+0.75rem)]">
         <button onClick={() => setSelectedChat(null)} className="text-muted-foreground">
           <ArrowLeft className="h-5 w-5" />
         </button>
@@ -135,7 +135,7 @@ export default function ChatScreen() {
         })}
       </div>
 
-      <div className="fixed bottom-16 left-0 right-0 border-t border-border bg-card px-4 py-3">
+      <div className="fixed bottom-safe-nav left-0 right-0 border-t border-border bg-card px-4 py-3">
         <div className="mx-auto flex max-w-lg items-center gap-2">
           <input
             type="text"

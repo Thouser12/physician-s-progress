@@ -167,7 +167,7 @@ export default function PatientDetail() {
   };
 
   return (
-    <div className="min-h-screen bg-background px-4 pb-24 pt-6">
+    <div className="min-h-screen bg-background px-4 pb-safe-24 pt-safe-6">
       <button onClick={() => navigate("/patients")} className="mb-4 flex items-center gap-1.5 text-sm text-muted-foreground">
         <ArrowLeft className="h-4 w-4" /> Voltar
       </button>
