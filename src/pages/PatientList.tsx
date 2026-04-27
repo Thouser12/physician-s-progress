@@ -25,7 +25,7 @@ export default function PatientList() {
   }
 
   return (
-    <div className="min-h-screen bg-background px-4 pb-24 pt-6">
+    <div className="min-h-screen bg-background px-4 pb-safe-24 pt-safe-6">
       <h1 className="mb-1 text-2xl font-bold text-foreground">Pacientes</h1>
       <p className="mb-4 text-sm text-muted-foreground">{patients.length} vinculados</p>
 
