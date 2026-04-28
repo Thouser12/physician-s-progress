@@ -3,6 +3,7 @@ import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { getAppOrigin } from '@/lib/platform';
 import { clearAllCachedProfiles } from '@/lib/profileCache';
+import { deleteOwnDeviceTokens, teardownPushNotifications } from '@/lib/pushNotifications';
 
 interface SignUpResult {
   error: string | null;
@@ -87,7 +88,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signOut = async () => {
+    const currentUserId = session?.user.id;
     clearAllCachedProfiles();
+    if (currentUserId) {
+      await deleteOwnDeviceTokens(currentUserId);
+    }
+    await teardownPushNotifications();
     await supabase.auth.signOut();
   };
 
