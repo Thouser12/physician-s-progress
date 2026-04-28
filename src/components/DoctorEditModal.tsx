@@ -11,6 +11,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { cropImageToSquare } from '@/lib/crop-image';
 import { ImageCropDialog } from '@/components/ImageCropDialog';
+import { setCachedProfile } from '@/lib/profileCache';
 
 interface DoctorEditModalProps {
   open: boolean;
@@ -113,6 +114,13 @@ export function DoctorEditModal({
         .eq('id', authUser.id);
 
       if (error) throw error;
+
+      setCachedProfile(authUser.id, {
+        name: name.trim(),
+        avatarUrl,
+        crmNumber: crm.trim() || null,
+        specialty: specialty.trim() || null,
+      });
 
       onSaved();
       onOpenChange(false);
